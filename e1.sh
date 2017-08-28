@@ -13,15 +13,17 @@ nmap -sn "$a/$b" | cut -d ' ' -f 5 | sed '/latency)./d' | grep -oE "\b([0-9]{1,3
 # Detect OS
 cat host.txt | while read output
 do
-	nc -zv $output 22 > /dev/null 2>&1
+	nc -zvw 10 $output 22 > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
 		echo "$output is up and using Linux"
+		continue
 	else
-		nc -zv $output 3389 > /dev/null 2>&1
+		nc -zvw 10 $output 3389 > /dev/null 2>&1
 		if [ $? -eq 0 ]; then
 			echo "$output is up and using Win"
+			continue
 		else
-		nc -zv $output 22 3389 > /dev/null 2>&1
+		nc -zvw 10 $output 22 3389 > /dev/null 2>&1
 			if [ $? -eq 0 ]; then
 				echo "$output is up but using Unknown OS"
 			else
