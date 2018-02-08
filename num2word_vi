@@ -1,0 +1,133 @@
+#!/usr/bin/python2.7
+# -*- coding: utf8 -*-
+
+n1 = ["", "một ", "hai ", "ba ", "bốn ",
+      "năm ", "sáu ", "bảy ", "tám ", "chín "]
+
+n2 = ["mười ", "mười một ", "mười hai ", "mười ba ",
+      "mười bốn ", "mười năm ", "mười sáu ", "mười bảy ",
+      "mười tám ", "mười chín "]
+
+n3 = ["", "", "hai mươi ", "ba mươi ", "bốn mươi ", "năm mươi ",
+      "sáu mươi ", "bảy mươi ", "tám mươi ", "chín mươi "]
+
+n4 = ["", "một trăm ", "hai trăm ", "ba trăm ", "bốn trăm ",
+      "năm trăm ", "sáu trăm ", "bảy trăm ", "tám trăm ", "chín trăm "]
+
+
+def digits(n):
+    word = n1[n]
+    return word
+
+
+def tens(n):
+    word = ''
+    if n[0] == "1":
+        word = n2[int(n[1])]
+    elif n[1] == "0":
+        word = n3[int(n[0])]
+    elif n[0] != "1" and n[1] != "0":
+        word = n3[int(n[0])] + n1[int(n[1])]
+    return word
+
+
+def hundred(n):
+    if n[0] != "0" and n[1:] == "00":
+        word = n4[int(n[0])]
+    elif n[0] != "0" and n[1] == "0" and n[2] != "0":
+        word = n4[int(n[0])] + "linh " + n1[int(n[2])]
+    else:
+        word = n4[int(n[0])] + tens(n[1:])
+    return word
+
+
+def thousand(n):
+    thousand_digits = ''
+    hundred_digits = ''
+    word = ''
+    length_number_number = len(n)
+    if length_number == 6:
+        hundred_digits = hundred(n[3:])
+        thousand_digits = hundred(n[:3])
+    if length_number_number == 5:
+        hundred_digits = hundred(n[2:])
+        thousand_digits = tens(n[:2])
+    if length_number == 4:
+        hundred_digits = hundred(n[1:])
+        word = n1[int(n[0])]
+    if n[0] != '0' or n[1] != "0" or n[2] != "0":
+        word = word + "nghìn "
+    word = word + hundred_digits
+    if length_number == 5 or length_number == 6:
+        word = thousand_digits + word
+    return word
+
+
+def milion(n):
+    milion_digits = ''
+    thousand_digits = ''
+    word = ''
+    length_milion_number = len(n)
+    if length_milion_number == 9:
+        thousand_digits = thousand(n[3:])
+        milion_digits = hundred(n[:3])
+    if length_milion_number == 8:
+        thousand_digits = thousand(n[2:])
+        milion_digits = tens(n[:2])
+    if length_milion_number == 7:
+        thousand_digits = thousand(n[1:])
+        word = n1[int(n[0])]
+    if n[0] != '0' or n[1] != "0" or n[2] != "0":
+        word = word + "triệu "
+    word = word + thousand_digits
+    if length_milion_number == 9 or length_milion_number == 8:
+        word = milion_digits + word
+    return word
+
+
+def billion(n):
+    billion_digits = ''
+    milion_digits = ''
+    word = ''
+    length_bilion_number = len(n)
+    if length_bilion_number == 12:
+        milion_digits = milion(n[3:])
+        billion_digits = hundred(n[:3])
+    if length_bilion_number == 11:
+        milion_digits = milion(n[2:])
+        billion_digits = tens(n[:2])
+    if length_bilion_number == 10:
+        milion_digits = milion(n[1:])
+        word = n1[int(n[0])]
+    if n[0] != '0' or n[1] != "0" or n[2] != "0":
+        word = word + "tỷ "
+    word = word + milion_digits
+    if length_bilion_number == 12 or length_bilion_number == 11:
+        word = billion_digits + word
+    return word
+
+
+if __name__ == "__main__":
+    res = ""
+    number = raw_input("Nhập số cần chuyển đổi: ")
+    while not number.isdigit():
+        print "Chương trình chỉ chấp nhận số tự nhiên."
+        print "Mời nhập lại"
+        number = raw_input("Nhập số cần chuyển đổi: ")
+    length_number = len(str(number))
+    if length_number == 1:
+        if str(number) == "0":
+            res = "Số Không"
+        else:
+            res = digits(number)
+    if length_number == 2:
+        res = tens(number)
+    elif length_number == 3:
+        res = hundred(number)
+    elif 3 < length_number < 7:
+        res = thousand(number)
+    elif 6 < length_number < 10:
+        res = milion(number)
+    elif 9 < length_number < 13:
+        res = billion(number)
+    print "Kết quả chuyển đổi là: {}".format(res)
